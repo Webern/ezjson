@@ -7,6 +7,7 @@
 #include <string>
 #include <sstream>
 #include <istream>
+#include <fstream>
 
 namespace ezjson
 {
@@ -152,21 +153,25 @@ namespace ezjson
     void
     Doc::saveStream( std::ostream& os ) const
     {
-        EZJ_NOT_IMPLEMENTED;
+        getRoot()->toStream( os, 0 );
     }
     
     
     void
     Doc::loadFile( const std::string& filename )
     {
-        EZJ_NOT_IMPLEMENTED;
+        std::ifstream infile{ filename };
+        EZJ_ASSERT( infile.is_open() );
+        loadStream( infile );
     }
     
     
     void
     Doc::saveFile( const std::string& filename ) const
     {
-        EZJ_NOT_IMPLEMENTED;
+        std::ofstream ofile{ filename };
+        EZJ_ASSERT( ofile.is_open() );
+        saveStream( ofile );
     }
     
     
