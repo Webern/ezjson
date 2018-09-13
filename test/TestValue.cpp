@@ -1,8 +1,11 @@
 #include "catch.h"
 #include "Value.h"
 #include "Doc.h"
+#include "compareWithoutWhitespace.h"
 
 #include <sstream>
+
+static constexpr const char* const someJson = "{\"a\":\"hello\",\"b\":true,\"c\":0,\"d\":{},\"x\":[{\"subsub\":0},{\"bones\":\"bishop\"}],\"z\":[{\"silver\":0},{\"bison\":\"elk\"}]}";
 
 TEST_CASE( "Value - toStream" )
 {
@@ -70,5 +73,7 @@ TEST_CASE( "Value - toStream" )
     std::stringstream ss;
     doc->getRoot()->toStream( ss, 0 );
     
-    std::cout << ss.str() << std::endl;
+    const std::string expected = someJson;
+    const std::string actual = ss.str();
+    CHECK( areEqualWithoutWhiteSpace( expected, actual ) );
 }
