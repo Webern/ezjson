@@ -101,6 +101,8 @@ Proj/
 cmake-build-debug/
 cmake-build-release/
 xcode-build/
+xcode/
+
 
 #####################################
 # Stuff I found online              #
