@@ -277,10 +277,7 @@ namespace ezjson
     void
     Value::appendObjectProperty( JValueUPtr&& inJValue )
     {
-        if( getType() != JValueType::object )
-        {
-            throw "object properties can only be added to objects";
-        }
+        throwIfNot( JValueType::object );
         
         if( !isSameDoc( inJValue->getDoc() ) )
         {
@@ -292,6 +289,13 @@ namespace ezjson
             throw "object properties must have names";
         }
         
+        const auto iter = findProperty( inJValue->getName() );
+        
+        if( iter != std::cend( myChildren ) )
+        {
+            throw "the same property cannot exist on an object more than once";
+        }
+        
         myChildren.push_back( std::move( inJValue ) );
     }
     
@@ -299,10 +303,7 @@ namespace ezjson
     void
     Value::prependObjectProperty( JValueUPtr&& inJValue )
     {
-        if( getType() != JValueType::object )
-        {
-            throw "object properties can only be added to objects";
-        }
+        throwIfNot( JValueType::object );
         
         if( !isSameDoc( inJValue->getDoc() ) )
         {
@@ -328,10 +329,7 @@ namespace ezjson
     void
     Value::insertObjectProperty( int inPosition, JValueUPtr&& inJValue )
     {
-        if( getType() != JValueType::object )
-        {
-            throw "object properties can only be added to objects";
-        }
+        throwIfNot( JValueType::object );
         
         if( !isSameDoc( inJValue->getDoc() ) )
         {
@@ -363,10 +361,7 @@ namespace ezjson
     void
     Value::deleteObjectProperty( int inPosition )
     {
-        if( getType() != JValueType::object )
-        {
-            throw "object properties can only be deleted from objects";
-        }
+        throwIfNot( JValueType::object );
         
         if( inPosition < 0 )
         {
@@ -388,10 +383,7 @@ namespace ezjson
     void
     Value::appendArrayItem( JValueUPtr&& inJValue )
     {
-        if( getType() != JValueType::array )
-        {
-            throw "array items can only be added to arrays";
-        }
+        throwIfNot( JValueType::array );
         
         if( !isSameDoc( inJValue->getDoc() ) )
         {
@@ -410,10 +402,7 @@ namespace ezjson
     void
     Value::prependArrayItem( JValueUPtr&& inJValue )
     {
-        if( getType() != JValueType::array )
-        {
-            throw "array items can only be added to arrays";
-        }
+        throwIfNot( JValueType::array );
         
         if( !isSameDoc( inJValue->getDoc() ) )
         {
@@ -439,10 +428,7 @@ namespace ezjson
     void
     Value::insertArrayItem( int inPosition, JValueUPtr&& inJValue )
     {
-        if( getType() != JValueType::array )
-        {
-            throw "array items can only be added to arrays";
-        }
+        throwIfNot( JValueType::array );
         
         if( !isSameDoc( inJValue->getDoc() ) )
         {
@@ -474,10 +460,7 @@ namespace ezjson
     void
     Value::deleteArrayItem( int inPosition )
     {
-        if( getType() != JValueType::array )
-        {
-            throw "array items can only be deleted from arrays";
-        }
+        throwIfNot( JValueType::array );
         
         if( inPosition < 0 )
         {
@@ -533,7 +516,7 @@ namespace ezjson
         {
             case JValueType::object:
             {
-                os << spaces << "{" << std::endl;
+                os << ( getIsNamed() ? "" : spaces ) << "{" << std::endl;
                 
                 size_t current = 0;
                 
@@ -556,7 +539,7 @@ namespace ezjson
                 
             case JValueType::array:
             {
-                os << spaces << "[" << std::endl;
+                os << ( getIsNamed() ? "" : spaces ) << "[" << std::endl;
                 
                 size_t current = 0;
                 
@@ -625,4 +608,34 @@ namespace ezjson
         return myDoc.get() == inJDoc.get();
     }
 
+    
+    std::vector<JValueUPtr>::const_iterator
+    Value::findProperty( const std::string& inPropertyName )
+    {
+        const auto finder = [&]( const JValueUPtr& inItem )
+        {
+            return inItem->getName() == inPropertyName;
+        };
+        
+        const auto iter = std::find_if( std::cbegin( myChildren ), std::cend( myChildren ), finder );
+        
+        return iter;
+    }
+    
+    
+    bool
+    Value::getPropertyExists( const std::string& inPropertyName )
+    {
+        const auto iter = findProperty( inPropertyName );
+        return iter != std::cend( myChildren );
+    }
+    
+    void
+    Value::throwIfNot( JValueType inType ) const
+    {
+        if( myType != inType )
+        {
+            throw "the jvalue is not of the right type for this operation";
+        }
+    }
 }
