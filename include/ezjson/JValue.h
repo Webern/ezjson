@@ -53,6 +53,9 @@ namespace ezjson
         virtual void setValueText( const std::string& inText ) = 0;
         virtual void setValueNumber( double inNumber ) = 0;
         virtual void setValueBool( bool inBool ) = 0;
+        virtual void setIsObject() = 0;
+        virtual void setIsArray() = 0;
+        
 
         // get the JDoc from which this
         // entire json tree descends

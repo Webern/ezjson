@@ -12,6 +12,6 @@ namespace ezjson
     {
     public:
         static JDocPtr makeJDoc();
-        static JValueUPtr makeJValue( JDoc& inJDoc );
+        static JValueUPtr makeJValue( JDocPtr& inJDoc );
     };
 }

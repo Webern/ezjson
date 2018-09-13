@@ -59,7 +59,7 @@ namespace ezjson
     Value::setName( const std::string& inName )
     {
         
-        if( getParent() )
+        if( false ) //getParent() )
         {
             const auto parentType = getParent()->getType();
             
@@ -231,6 +231,32 @@ namespace ezjson
         clear();
         myType = JValueType::boolean;
         myBool = inBool;
+    }
+    
+    
+    void
+    Value::setIsObject()
+    {
+        if( myType == JValueType::object )
+        {
+            return;
+        }
+        
+        clear();
+        myType = JValueType::object;
+    }
+    
+    
+    void
+    Value::setIsArray()
+    {
+        if( myType == JValueType::array )
+        {
+            return;
+        }
+        
+        clear();
+        myType = JValueType::array;
     }
     
     
@@ -513,7 +539,7 @@ namespace ezjson
                 
                 for( const auto& prop : myChildren )
                 {
-                    prop->toStream( os, inNestingLevel, inPrettyIndent >= 0 ? inPrettyIndent + 1 : -1 );
+                    prop->toStream( os, inNestingLevel + 1, inPrettyIndent );
                     
                     if( current < myChildren.size() - 1 )
                     {
@@ -536,7 +562,7 @@ namespace ezjson
                 
                 for( const auto& prop : myChildren )
                 {
-                    prop->toStream( os, inNestingLevel, inPrettyIndent >= 0 ? inPrettyIndent + 1 : -1 );
+                    prop->toStream( os, inNestingLevel + 1, inPrettyIndent );
                     
                     if( current < myChildren.size() - 1 )
                     {
