@@ -500,31 +500,93 @@ namespace ezjson
         
         if( getIsNamed() )
         {
-            os << "\"" << getName() << "\": ";
+            os << spaces << "\"" << getName() << "\": ";
         }
         
-        switch (getType())
+        switch ( getType() )
         {
             case JValueType::object:
             {
+                os << spaces << "{" << std::endl;
+                
+                size_t current = 0;
+                
+                for( const auto& prop : myChildren )
+                {
+                    prop->toStream( os, inNestingLevel, inPrettyIndent >= 0 ? inPrettyIndent + 1 : -1 );
+                    
+                    if( current < myChildren.size() - 1 )
+                    {
+                        os << ",";
+                    }
+                    
+                    os << std::endl;
+                    ++current;
+                }
+                
+                os << spaces << "}";
             }
                 break;
                 
             case JValueType::array:
             {
+                os << spaces << "[" << std::endl;
+                
+                size_t current = 0;
+                
+                for( const auto& prop : myChildren )
+                {
+                    prop->toStream( os, inNestingLevel, inPrettyIndent >= 0 ? inPrettyIndent + 1 : -1 );
+                    
+                    if( current < myChildren.size() - 1 )
+                    {
+                        os << ",";
+                    }
+                    
+                    os << std::endl;
+                    ++current;
+                }
+                
+                os << spaces << "]";
             }
                 break;
                 
             case JValueType::text:
             {
+                os << "\"" << getValueText() << "\"";
+            }
+                break;
+                
+            case JValueType::number:
+            {
+                os << getValueNumber();
+            }
+                break;
+                
+            case JValueType::boolean:
+            {
+                if( getValueBool() )
+                {
+                    os << "true";
+                }
+                else
+                {
+                    os << "false";
+                }
+            }
+                break;
+                
+            case JValueType::null:
+            {
+                os << "null";
             }
                 break;
                 
             default:
+                throw "should never be here";
                 break;
         }
     }
-    
 
 
 ///////////////////////////////////////////////////////////////////
