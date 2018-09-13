@@ -2,8 +2,9 @@
 
 #pragma once
 
-#include <memory>
 #include <iostream>
+#include <memory>
+#include <vector>
 
 namespace ezjson
 {
@@ -31,7 +32,7 @@ namespace ezjson
     {
     public:
         virtual ~JValue() = default;
-        virtual JValuePtr clone() const = 0;
+        virtual JValueUPtr clone() const = 0;
 
         virtual JValueType getType() const = 0;
         virtual bool getIsNamed() const = 0;
@@ -46,7 +47,7 @@ namespace ezjson
         virtual bool getValueBool() const = 0;
         virtual JValueVec getObjectProperties() const = 0;
         virtual JValueCPtr getObjectProperty( const std::string& inPropertyName ) const = 0;
-        virtual void removeObjectProperty( const std::string& inPropertyName );
+        virtual void removeObjectProperty( const std::string& inPropertyName ) = 0;
         virtual JValueVec getArrayItems() const = 0;
 
         virtual void setValueText( const std::string& inText ) = 0;
@@ -66,20 +67,20 @@ namespace ezjson
         // throws if this jvalue's type == object
         // throws if the JValue is not named
         // throws if the JValue does not have the same JDoc parent
-        virtual void appendObjectProperty( JValuePtr&& inJValue ) = 0;
+        virtual void appendObjectProperty( JValueUPtr&& JValueUPtr ) = 0;
 
         // add a jvalue as the first child of this object
         // throws if this jvalue's type == object
         // throws if the JValue is not named
         // throws if the JValue does not have the same JDoc parent
-        virtual void prependObjectProperty( JValuePtr&& inJValue ) = 0;
+        virtual void prependObjectProperty( JValueUPtr&& JValueUPtr ) = 0;
 
         // add a jvalue as at the given position
         // throws if this jvalue's type == object
         // throws if the JValue is not named
         // throws if the JValue does not have the same JDoc parent
         // throws if the position is out of range
-        virtual void insertObjectProperty( int inPosition, JValuePtr&& inJValue ) = 0;
+        virtual void insertObjectProperty( int inPosition, JValueUPtr&& inJValue ) = 0;
 
         // delete a jvalue from this object.
         // throws if this jvalue's type == object
@@ -89,18 +90,18 @@ namespace ezjson
         // add a jvalue as the last item of this array.
         // throws if this jvalue's type == array
         // throws if the JValue does not have the same JDoc parent
-        virtual void appendArrayItem( JValuePtr&& inJValue ) = 0;
+        virtual void appendArrayItem( JValueUPtr&& inJValue ) = 0;
 
         // add a jvalue as the last item of this array.
         // throws if this jvalue's type == array
         // throws if the JValue does not have the same JDoc parent
-        virtual void prependArrayItem( JValuePtr&& inJValue ) = 0;
+        virtual void prependArrayItem( JValueUPtr&& inJValue ) = 0;
 
         // add a jvalue as at the given position
         // throws if this jvalue's type == array
         // throws if the JValue does not have the same JDoc parent
         // throws if the position is out of range
-        virtual void insertArrayItem( int inPosition, JValuePtr&& inJValue ) = 0;
+        virtual void insertArrayItem( int inPosition, JValueUPtr&& inJValue ) = 0;
 
         // delete a jvalue from this object.
         // throws if this jvalue's type == array
@@ -112,6 +113,6 @@ namespace ezjson
         // if anything else - changes to null type
         virtual void clear() = 0;
         
-        virtual void toStream( std::ostream& os, int inPrettyIndent = 2 ) const = 0;
+        virtual void toStream( std::ostream& os, int inNestingLevel, int inPrettyIndent = 2 ) const = 0;
     };
 }
