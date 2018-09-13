@@ -75,5 +75,21 @@ TEST_CASE( "Value - toStream" )
     
     const std::string expected = someJson;
     const std::string actual = ss.str();
-    CHECK( areEqualWithoutWhiteSpace( expected, actual ) );
+    CHECK( areEqualWithoutWhiteSpace( expected, actual ) == "" );
+}
+
+TEST_CASE( "Value - doc parse" )
+{
+    using namespace ezjson;
+    auto doc = std::make_shared<Doc>();
+    
+    std::istringstream is{ someJson };
+    doc->loadStream( is );
+    
+    std::stringstream os;
+    doc->getRoot()->toStream( os, 0 );
+    
+    const std::string expected = someJson;
+    const std::string actual = os.str();
+    CHECK( areEqualWithoutWhiteSpace( expected, actual ) == "" );
 }
