@@ -17,6 +17,7 @@ namespace ezjson
         Doc& operator=( Doc&& inValue ) noexcept = default;
         
     public:
+        virtual JValueUPtr makeValue() const override;
         virtual void loadStream( std::istream& is ) override;
         virtual void saveStream( std::ostream& os ) const override;
         virtual void loadFile( const std::string& filename ) override;

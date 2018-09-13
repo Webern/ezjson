@@ -258,6 +258,13 @@ namespace ezjson
     }
     
     
+    void
+    Value::setIsNull()
+    {
+        clear();
+    }
+    
+    
     JDocCPtr
     Value::getDoc() const
     {

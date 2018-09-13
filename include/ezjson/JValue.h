@@ -55,6 +55,7 @@ namespace ezjson
         virtual void setValueBool( bool inBool ) = 0;
         virtual void setIsObject() = 0;
         virtual void setIsArray() = 0;
+        virtual void setIsNull() = 0;
         
 
         // get the JDoc from which this

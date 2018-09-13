@@ -38,6 +38,7 @@ namespace ezjson
         virtual void setValueBool( bool inBool ) override;
         virtual void setIsObject() override;
         virtual void setIsArray() override;
+        virtual void setIsNull() override;
         
         // get the JDoc from which this
         // entire json tree descends
