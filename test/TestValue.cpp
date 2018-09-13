@@ -5,7 +5,7 @@
 
 #include <sstream>
 
-static constexpr const char* const someJson = "{\"a\":\"hello\",\"b\":true,\"c\":0,\"d\":{},\"x\":[{\"subsub\":0},{\"bones\":\"bishop\"}],\"z\":[{\"silver\":0},{\"bison\":\"elk\"}]}";
+constexpr const char* const someJson = R"json({"a":"hello","b":true,"c":0,"d":{},"x":[{"subsub":0},{"bones":"bishop"}],"z":[{"silver":0},{"bison":"elk"}]})json";
 
 TEST_CASE( "Value - toStream" )
 {
@@ -82,14 +82,14 @@ TEST_CASE( "Value - doc parse" )
 {
     using namespace ezjson;
     auto doc = std::make_shared<Doc>();
+    const std::string expected = someJson;
     
-    std::istringstream is{ someJson };
+    std::istringstream is{ expected };
     doc->loadStream( is );
     
     std::stringstream os;
     doc->getRoot()->toStream( os, 0 );
     
-    const std::string expected = someJson;
     const std::string actual = os.str();
     CHECK( areEqualWithoutWhiteSpace( expected, actual ) == "" );
 }

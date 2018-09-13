@@ -1,10 +1,22 @@
 #include "Doc.h"
 #include "Throw.h"
+#include "rapidjson/document.h"
+#include "rapidjson/istreamwrapper.h"
 
+#include <iostream>
+#include <string>
 #include <sstream>
+#include <istream>
 
 namespace ezjson
 {
+    constexpr const auto RJFLAGS =
+    rapidjson::kParseDefaultFlags |
+//    rapidjson::kParseInsituFlag |
+    rapidjson::kParseCommentsFlag |
+    rapidjson::kParseTrailingCommasFlag |
+    rapidjson::kParseNanAndInfFlag;
+    
     Doc::Doc()
     : myRoot{}
     {
@@ -18,6 +30,9 @@ namespace ezjson
     void
     Doc::loadStream( std::istream& is )
     {
+        rapidjson::Document rjdoc;
+        rapidjson::BasicIStreamWrapper rjis{ is };
+        rjdoc.ParseStream<RJFLAGS>( rjis );
         EZJ_NOT_IMPLEMENTED;
     }
     
