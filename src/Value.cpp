@@ -516,47 +516,59 @@ namespace ezjson
         {
             case JValueType::object:
             {
-                os << ( getIsNamed() ? "" : spaces ) << "{" << std::endl;
+                os << ( getIsNamed() ? "" : spaces ) << "{";
                 
-                size_t current = 0;
-                
-                for( const auto& prop : myChildren )
+                if( !myChildren.empty() )
                 {
-                    prop->toStream( os, inNestingLevel + 1, inPrettyIndent );
+                    os << std::endl;
+                    size_t current = 0;
                     
-                    if( current < myChildren.size() - 1 )
+                    for( const auto& prop : myChildren )
                     {
-                        os << ",";
+                        prop->toStream( os, inNestingLevel + 1, inPrettyIndent );
+                        
+                        if( current < myChildren.size() - 1 )
+                        {
+                            os << ",";
+                        }
+                        
+                        os << std::endl;
+                        ++current;
                     }
                     
-                    os << std::endl;
-                    ++current;
+                    os << spaces;
                 }
-                
-                os << spaces << "}";
+
+                os << "}";
             }
                 break;
                 
             case JValueType::array:
             {
-                os << ( getIsNamed() ? "" : spaces ) << "[" << std::endl;
+                os << ( getIsNamed() ? "" : spaces ) << "[";;
                 
-                size_t current = 0;
-                
-                for( const auto& prop : myChildren )
+                if( !myChildren.empty() )
                 {
-                    prop->toStream( os, inNestingLevel + 1, inPrettyIndent );
+                    os << std::endl;
+                    size_t current = 0;
                     
-                    if( current < myChildren.size() - 1 )
+                    for( const auto& prop : myChildren )
                     {
-                        os << ",";
+                        prop->toStream( os, inNestingLevel + 1, inPrettyIndent );
+                        
+                        if( current < myChildren.size() - 1 )
+                        {
+                            os << ",";
+                        }
+                        
+                        os << std::endl;
+                        ++current;
                     }
                     
-                    os << std::endl;
-                    ++current;
+                    os << spaces;
                 }
-                
-                os << spaces << "]";
+
+                os << "]";
             }
                 break;
                 
