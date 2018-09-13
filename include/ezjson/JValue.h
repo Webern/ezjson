@@ -17,6 +17,9 @@ namespace ezjson
         text,
     };
 
+    class JValue;
+    using JValuePtr = JValue*;
+    using JValueCPtr = const JValue*;
 
     class JValue
     {
@@ -35,6 +38,7 @@ namespace ezjson
         virtual bool getValueBool() const = 0;
         virtual JValueVec getObjectProperties() const = 0;
         virtual const JValue& getObjectProperty( const std::string& inPropertyName ) const = 0;
+        virtual void removeObjectProperty( const std::string& inPropertyName );
         virtual JValueVec getArrayItems() const = 0;
 
         virtual void setValueText( const std::string& inText ) = 0;
@@ -99,9 +103,6 @@ namespace ezjson
         // if array - removes all items
         // if anything else - changes to null type
         void clear() = 0;
-
-        // removes the first occurence of a child element with the given name
-        virtual bool removeChild( const std::string& elementName ) = 0;
         
         virtual void toStream( std::ostream& os, int inPrettyIndent = 2 ) const = 0;
     };
