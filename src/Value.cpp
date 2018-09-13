@@ -1,5 +1,5 @@
 #include "Value.h"
-
+#include "Throw.h"
 #include <sstream>
 
 namespace ezjson
@@ -9,11 +9,7 @@ namespace ezjson
     Value::Value( JDocPtr inJDoc )
     : Value{}
     {
-        if( inJDoc == nullptr )
-        {
-            throw "inJDoc is null";
-        }
-        
+        EZJ_ASSERT( inJDoc != nullptr );
         myDoc = inJDoc;
     }
     
@@ -74,11 +70,7 @@ namespace ezjson
     std::string
     Value::getName() const
     {
-        if( !getIsNamed() )
-        {
-            throw "";
-        }
-        
+        EZJ_ASSERT( getIsNamed() );
         return myName;
     }
     
@@ -90,19 +82,12 @@ namespace ezjson
         if( false ) //getParent() )
         {
             const auto parentType = getParent()->getType();
+            EZJ_ASSERT( parentType == JValueType::array );
             
-            if( parentType == JValueType::array )
-            {
-                throw "array items cannot be named";
-            }
-            else if( parentType == JValueType::object )
+            if( parentType == JValueType::object )
             {
                 const auto propWithSameName = getParent()->getObjectProperty( inName );
-                
-                if( propWithSameName != nullptr )
-                {
-                    throw "a property of the same name already exists on the parent object";
-                }
+                EZJ_ASSERT( propWithSameName == nullptr );
             }
         }
         
@@ -150,10 +135,7 @@ namespace ezjson
     JValueVec
     Value::getObjectProperties() const
     {
-        if( getType() != JValueType::object )
-        {
-            return JValueVec{};
-        }
+        EZJ_ASSERT( getType() == JValueType::object );
         
         JValueVec vec;
         
@@ -169,10 +151,7 @@ namespace ezjson
     JValueCPtr
     Value::getObjectProperty( const std::string& inPropertyName ) const
     {
-        if( getType() != JValueType::object )
-        {
-            return nullptr;
-        }
+        EZJ_ASSERT( getType() == JValueType::object );
         
         const auto finder = [&]( const JValueUPtr& inItem )
         {
@@ -193,11 +172,7 @@ namespace ezjson
     void
     Value::removeObjectProperty( const std::string& inPropertyName )
     {
-        if( getType() != JValueType::object )
-        {
-            // throw?
-            return;
-        }
+        EZJ_ASSERT( getType() == JValueType::object );
         
         const auto finder = [&]( const JValueUPtr& inItem )
         {
@@ -219,11 +194,7 @@ namespace ezjson
     JValueVec
     Value::getArrayItems() const
     {
-        if( getType() != JValueType::array )
-        {
-            return JValueVec{};
-        }
-        
+        EZJ_ASSERT( getType() == JValueType::array );
         JValueVec vec;
         
         for( const auto& item : myChildren )
@@ -298,7 +269,7 @@ namespace ezjson
     JValueCPtr
     Value::getParent() const
     {
-        throw "not implemented";
+        EZJ_NOT_IMPLEMENTED;
     }
     
     
@@ -306,24 +277,10 @@ namespace ezjson
     Value::appendObjectProperty( JValueUPtr&& inJValue )
     {
         throwIfNot( JValueType::object );
-        
-        if( !isSameDoc( inJValue->getDoc() ) )
-        {
-            throw "incoming jvalue must be created with the same jdoc";
-        }
-        
-        if( !inJValue->getIsNamed() )
-        {
-            throw "object properties must have names";
-        }
-        
+        EZJ_ASSERT( isSameDoc( inJValue->getDoc() ) );
+        EZJ_ASSERT( inJValue->getIsNamed() );
         const auto iter = findProperty( inJValue->getName() );
-        
-        if( iter != std::cend( myChildren ) )
-        {
-            throw "the same property cannot exist on an object more than once";
-        }
-        
+        EZJ_ASSERT( iter == std::cend( myChildren ) );
         myChildren.push_back( std::move( inJValue ) );
     }
     
@@ -358,29 +315,10 @@ namespace ezjson
     Value::insertObjectProperty( int inPosition, JValueUPtr&& inJValue )
     {
         throwIfNot( JValueType::object );
-        
-        if( !isSameDoc( inJValue->getDoc() ) )
-        {
-            throw "incoming jvalue must be created with the same jdoc";
-        }
-        
-        if( !inJValue->getIsNamed() )
-        {
-            throw "object properties must have names";
-        }
-        
-        if( inPosition < 0 )
-        {
-            throw "position is out of bounds (negative)";
-        }
-        
+        EZJ_ASSERT( isSameDoc( inJValue->getDoc() ) );
+        EZJ_ASSERT( inJValue->getIsNamed() );
+        EZJ_THROW_IF_BAD_VALUE( inPosition, 0, static_cast<int>( myChildren.size() - 1 ) );
         const size_t posSizeT = static_cast<size_t>( inPosition );
-        
-        if( posSizeT > myChildren.size() - 1 )
-        {
-            throw "position is out of bounds (too large)";
-        }
-        
         const auto iter = std::cbegin( myChildren ) + posSizeT;
         myChildren.insert( iter, std::move( inJValue ) );
     }
@@ -390,19 +328,8 @@ namespace ezjson
     Value::deleteObjectProperty( int inPosition )
     {
         throwIfNot( JValueType::object );
-        
-        if( inPosition < 0 )
-        {
-            throw "position is out of bounds (negative)";
-        }
-        
+        EZJ_THROW_IF_BAD_VALUE( inPosition, 0, static_cast<int>( myChildren.size() - 1 ) );
         const size_t posSizeT = static_cast<size_t>( inPosition );
-        
-        if( posSizeT > myChildren.size() - 1 )
-        {
-            throw "position is out of bounds (too large)";
-        }
-        
         const auto iter = std::cbegin( myChildren ) + posSizeT;
         myChildren.erase( iter );
     }
@@ -412,17 +339,8 @@ namespace ezjson
     Value::appendArrayItem( JValueUPtr&& inJValue )
     {
         throwIfNot( JValueType::array );
-        
-        if( !isSameDoc( inJValue->getDoc() ) )
-        {
-            throw "incoming jvalue must be created with the same jdoc";
-        }
-        
-        if( inJValue->getIsNamed() )
-        {
-            throw "array items cannot be named";
-        }
-        
+        EZJ_ASSERT( isSameDoc( inJValue->getDoc() ) );
+        EZJ_ASSERT( !inJValue->getIsNamed() );
         myChildren.push_back( std::move( inJValue ) );
     }
     
@@ -431,16 +349,8 @@ namespace ezjson
     Value::prependArrayItem( JValueUPtr&& inJValue )
     {
         throwIfNot( JValueType::array );
-        
-        if( !isSameDoc( inJValue->getDoc() ) )
-        {
-            throw "incoming jvalue must be created with the same jdoc";
-        }
-        
-        if( inJValue->getIsNamed() )
-        {
-            throw "array items cannot be named";
-        }
+        EZJ_ASSERT( isSameDoc( inJValue->getDoc() ) );
+        EZJ_ASSERT( !inJValue->getIsNamed() );
         
         if( myChildren.empty() )
         {
@@ -489,19 +399,8 @@ namespace ezjson
     Value::deleteArrayItem( int inPosition )
     {
         throwIfNot( JValueType::array );
-        
-        if( inPosition < 0 )
-        {
-            throw "position is out of bounds (negative)";
-        }
-        
+        EZJ_THROW_IF_BAD_VALUE( inPosition, 0, static_cast<int>( myChildren.size() - 1 ) );
         const size_t posSizeT = static_cast<size_t>( inPosition );
-        
-        if( posSizeT > myChildren.size() - 1 )
-        {
-            throw "position is out of bounds (too large)";
-        }
-        
         const auto iter = std::cbegin( myChildren ) + posSizeT;
         myChildren.erase( iter );
     }
@@ -632,7 +531,7 @@ namespace ezjson
                 break;
                 
             default:
-                throw "should never be here";
+                EZJ_BUG;
                 break;
         }
     }
@@ -670,13 +569,11 @@ namespace ezjson
         return iter != std::cend( myChildren );
     }
     
+    
     void
     Value::throwIfNot( JValueType inType ) const
     {
-        if( myType != inType )
-        {
-            throw "the jvalue is not of the right type for this operation";
-        }
+        EZJ_ASSERT( getType() == inType );
     }
     
     
