@@ -114,7 +114,6 @@ namespace ezjson
         bool isSameDoc( const JDocCPtr& inJDoc ) const;
         std::vector<JValueUPtr>::const_iterator findProperty( const std::string& inPropertyName );
         bool getPropertyExists( const std::string& inPropertyName );
-        void throwIfNot( JValueType inType ) const;
         void copyOther( const Value& inValue );
     };
 }

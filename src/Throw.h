@@ -19,7 +19,7 @@
 
 #ifndef EZJ_THROW
 #define EZJ_THROW(throw_error_message)                   \
-throw std::runtime_error (                              \
+throw std::runtime_error {                              \
   std::string( "error in " )                            \
 + std::string( __FILENAME__ )                           \
 + std::string(" (line ")                                \
@@ -27,7 +27,8 @@ throw std::runtime_error (                              \
 + std::string(") ")                                     \
 + std::string( __FUNCTION__ )                           \
 + std::string(": '")                                    \
-+ std::string( throw_error_message ) );                    
++ std::string( throw_error_message )                    \
++ std::string("'") }; 
 #endif
 
 #ifndef EZJ_THROW_NULL

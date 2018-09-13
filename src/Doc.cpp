@@ -1,4 +1,5 @@
 #include "Doc.h"
+#include "Throw.h"
 
 #include <sstream>
 
@@ -17,28 +18,28 @@ namespace ezjson
     void
     Doc::loadStream( std::istream& is )
     {
-        throw "not implemented";
+        EZJ_NOT_IMPLEMENTED;
     }
     
     
     void
     Doc::saveStream( std::ostream& os ) const
     {
-        throw "not implemented";
+        EZJ_NOT_IMPLEMENTED;
     }
     
     
     void
     Doc::loadFile( const std::string& filename )
     {
-        throw "not implemented";
+        EZJ_NOT_IMPLEMENTED;
     }
     
     
     void
     Doc::saveFile( const std::string& filename ) const
     {
-        throw "not implemented";
+        EZJ_NOT_IMPLEMENTED;
     }
     
     
