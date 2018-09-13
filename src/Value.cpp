@@ -5,8 +5,22 @@
 namespace ezjson
 {
     static constexpr const char* const NOVAL = "this is a nully string";
+    
     Value::Value( JDocPtr inJDoc )
-    : myDoc{ std::move( inJDoc ) }
+    : Value{}
+    {
+        if( inJDoc == nullptr )
+        {
+            throw "inJDoc is null";
+        }
+        
+        myDoc = inJDoc;
+    }
+    
+    
+    // private constructor
+    Value::Value()
+    : myDoc{ nullptr }
     , myType{ JValueType::null }
     , myName{ NOVAL }
     , myText{}
@@ -16,6 +30,21 @@ namespace ezjson
     {
         
     }
+    
+    
+    Value::Value( const Value& inValue )
+    : Value{}
+    {
+        copyOther( inValue );
+    }
+    
+    
+    Value&
+    Value::operator=( const Value& inOther )
+    {
+        copyOther( inOther );
+        return *this;
+    }
 
 ///////////////////////////////////////////////////////////////////
 // public /////////////////////////////////////////////////////////
@@ -24,8 +53,7 @@ namespace ezjson
     JValueUPtr
     Value::clone() const
     {
-        throw "not implemented";
-        // std::make_unique<Value>( *this );
+        return std::make_unique<Value>( *this );
     }
     
     
@@ -648,6 +676,24 @@ namespace ezjson
         if( myType != inType )
         {
             throw "the jvalue is not of the right type for this operation";
+        }
+    }
+    
+    
+    void
+    Value::copyOther( const Value& inValue )
+    {
+        clear();
+        myDoc = inValue.myDoc;
+        myType = inValue.myType;
+        myName = inValue.myName;
+        myText = inValue.myText;
+        myNumber = inValue.myNumber;
+        myBool = inValue.myBool;
+        
+        for( const auto& child : inValue.myChildren )
+        {
+            myChildren.emplace_back( child->clone() );
         }
     }
 }

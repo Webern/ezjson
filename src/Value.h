@@ -9,9 +9,9 @@ namespace ezjson
     public:
         Value( JDocPtr inJDoc );
         ~Value() = default;
-        Value( const Value& inValue ) = default;
+        Value( const Value& inValue );
         Value( Value&& inValue ) noexcept = default;
-        Value& operator=( const Value& inValue ) = default;
+        Value& operator=( const Value& inValue );
         Value& operator=( Value&& inValue ) noexcept = default;
     
     public:
@@ -110,9 +110,11 @@ namespace ezjson
         std::vector<JValueUPtr> myChildren;
     
     private:
+        Value();
         bool isSameDoc( const JDocCPtr& inJDoc ) const;
         std::vector<JValueUPtr>::const_iterator findProperty( const std::string& inPropertyName );
         bool getPropertyExists( const std::string& inPropertyName );
         void throwIfNot( JValueType inType ) const;
+        void copyOther( const Value& inValue );
     };
 }
