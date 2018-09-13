@@ -3,14 +3,15 @@
 #pragma once
 
 #include "ezjson/JDoc.h"
+#include "ezjson/JValue.h"
 #include <memory>
 
 namespace ezjson
 {
-    class XFactory
+    class JFactory
     {
     public:
         static JDocPtr makeJDoc();
-        static JValue makeJValue( JDoc& inJDoc );
+        static JValueUPtr makeJValue( JDoc& inJDoc );
     };
 }

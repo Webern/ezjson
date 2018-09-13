@@ -1,9 +1,17 @@
-#include "ezjson/Factory.h"
+#include "ezjson/JFactory.h"
 
 namespace ezjson
 {
-    Factory::Factory()
+    JDocPtr
+    JFactory::makeJDoc()
     {
-
+        return nullptr;
+    }
+    
+    
+    JValueUPtr
+    JFactory::makeJValue( JDoc& inJDoc )
+    {
+        return nullptr;
     }
 }
