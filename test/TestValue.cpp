@@ -5,7 +5,7 @@
 
 #include <sstream>
 
-constexpr const char* const someJson = R"json({"a":"hello","b":true,"c":0,"d":{},"x":[{"subsub":0},{"bones":"bishop"}],"z":[{"silver":0},{"bison":"elk"}]})json";
+constexpr const char* const someJson = R"json({"a":"hello","b":true,"c":1.23,"d":{},"x":[{"subsub":3.45},{"bones":"bishop"}],"z":[{"silver":3.45},{"bison":"elk"}]})json";
 
 TEST_CASE( "Value - toStream" )
 {

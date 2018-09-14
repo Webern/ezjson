@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ezjson/JValue.h"
+#include "PreciseDecimal.h"
 
 namespace ezjson
 {
@@ -26,7 +27,7 @@ namespace ezjson
         virtual void setName( const std::string& inName ) override;
         
         virtual std::string getValueText() const override;
-        virtual double getValueNumber() const override;
+        virtual long double getValueNumber() const override;
         virtual bool getValueBool() const override;
         virtual JValueVec getObjectProperties() const override;
         virtual JValueCPtr getObjectProperty( const std::string& inPropertyName ) const override;
@@ -34,7 +35,7 @@ namespace ezjson
         virtual JValueVec getArrayItems() const override;
         
         virtual void setValueText( const std::string& inText ) override;
-        virtual void setValueNumber( double inNumber ) override;
+        virtual void setValueNumber( long double inNumber ) override;
         virtual void setValueBool( bool inBool ) override;
         virtual void setIsObject() override;
         virtual void setIsArray() override;
@@ -106,7 +107,7 @@ namespace ezjson
         JValueType myType;
         std::string myName;
         std::string myText;
-        double myNumber;
+        PreciseDecimal myNumber;
         bool myBool;
         std::vector<JValueUPtr> myChildren;
     
