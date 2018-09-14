@@ -18,6 +18,8 @@ namespace ezjson
     public:
         virtual ~JDoc() {}
 
+        virtual JValueUPtr makeValue() const = 0;
+        
         // these can throw std::runtime_error
         virtual void loadStream( std::istream& is ) = 0;
         virtual void saveStream( std::ostream& os ) const = 0;

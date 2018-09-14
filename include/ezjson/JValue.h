@@ -43,7 +43,7 @@ namespace ezjson
         virtual void setName( const std::string& inName ) = 0;
 
         virtual std::string getValueText() const = 0;
-        virtual double getValueNumber() const = 0;
+        virtual long double getValueNumber() const = 0;
         virtual bool getValueBool() const = 0;
         virtual JValueVec getObjectProperties() const = 0;
         virtual JValueCPtr getObjectProperty( const std::string& inPropertyName ) const = 0;
@@ -51,10 +51,11 @@ namespace ezjson
         virtual JValueVec getArrayItems() const = 0;
 
         virtual void setValueText( const std::string& inText ) = 0;
-        virtual void setValueNumber( double inNumber ) = 0;
+        virtual void setValueNumber( long double inNumber ) = 0;
         virtual void setValueBool( bool inBool ) = 0;
         virtual void setIsObject() = 0;
         virtual void setIsArray() = 0;
+        virtual void setIsNull() = 0;
         
 
         // get the JDoc from which this

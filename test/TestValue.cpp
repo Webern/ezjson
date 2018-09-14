@@ -1,8 +1,11 @@
 #include "catch.h"
 #include "Value.h"
 #include "Doc.h"
+#include "compareWithoutWhitespace.h"
 
 #include <sstream>
+
+constexpr const char* const someJson = R"json({"a":"hello","b":true,"c":1.23,"d":{},"x":[{"subsub":3.45},{"bones":"bishop"}],"z":[{"silver":3.45},{"bison":"elk"}]})json";
 
 TEST_CASE( "Value - toStream" )
 {
@@ -70,5 +73,23 @@ TEST_CASE( "Value - toStream" )
     std::stringstream ss;
     doc->getRoot()->toStream( ss, 0 );
     
-    std::cout << ss.str() << std::endl;
+    const std::string expected = someJson;
+    const std::string actual = ss.str();
+    CHECK( areEqualWithoutWhiteSpace( expected, actual ) == "" );
+}
+
+TEST_CASE( "Value - doc parse" )
+{
+    using namespace ezjson;
+    auto doc = std::make_shared<Doc>();
+    const std::string expected = someJson;
+    
+    std::istringstream is{ expected };
+    doc->loadStream( is );
+    
+    std::stringstream os;
+    doc->getRoot()->toStream( os, 0 );
+    
+    const std::string actual = os.str();
+    CHECK( areEqualWithoutWhiteSpace( expected, actual ) == "" );
 }
