@@ -523,11 +523,16 @@ namespace ezjson
             os << spaces << "\"" << escape( getName() ) << "\": ";
         }
         
+        const auto createSpaces = [&]()
+        {
+            return ( !getIsNamed() ? spaces : "" );
+        };
+        
         switch ( getType() )
         {
             case JValueType::object:
             {
-                os << ( getIsNamed() ? "" : spaces ) << "{";
+                os << createSpaces() << "{";
                 
                 if( !myChildren.empty() )
                 {
@@ -556,7 +561,7 @@ namespace ezjson
                 
             case JValueType::array:
             {
-                os << ( getIsNamed() ? "" : spaces ) << "[";;
+                os << createSpaces() << "[";;
                 
                 if( !myChildren.empty() )
                 {
@@ -585,13 +590,13 @@ namespace ezjson
                 
             case JValueType::text:
             {
-                os << "\"" << escape( getValueText() ) << "\"";
+                os << createSpaces() << "\"" << escape( getValueText() ) << "\"";
             }
                 break;
                 
             case JValueType::number:
             {
-                os << std::setprecision(std::numeric_limits<long double>::digits10 + 1) << myNumber.toString();
+                os << createSpaces() << std::setprecision(std::numeric_limits<long double>::digits10 + 1) << myNumber.toString();
             }
                 break;
                 
@@ -599,18 +604,18 @@ namespace ezjson
             {
                 if( getValueBool() )
                 {
-                    os << "true";
+                    os << createSpaces() << "true";
                 }
                 else
                 {
-                    os << "false";
+                    os << createSpaces() << "false";
                 }
             }
                 break;
                 
             case JValueType::null:
             {
-                os << "null";
+                os << createSpaces() << "null";
             }
                 break;
                 
