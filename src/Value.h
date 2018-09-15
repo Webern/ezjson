@@ -11,9 +11,9 @@ namespace ezjson
         Value( JDocPtr inJDoc );
         ~Value() = default;
         Value( const Value& inValue );
-        Value( Value&& inValue ) noexcept = default;
+        Value( Value&& inValue ) = default;
         Value& operator=( const Value& inValue );
-        Value& operator=( Value&& inValue ) noexcept = default;
+        Value& operator=( Value&& inValue ) = default;
     
     public:
         virtual JValueUPtr clone() const override;
