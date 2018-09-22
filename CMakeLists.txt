@@ -16,8 +16,8 @@ file(GLOB_RECURSE EZJ_TEST_SOURCE_FILE_LIST ${EZJ_TEST_DIR}/*.h ${EZJ_TEST_DIR}/
 add_library(ezjson STATIC ${EZJ_PRIVATE_SOURCE_FILE_LIST} ${EZJ_PUBLIC_HEADER_FILE_LIST} ${RAPIDJSON_HEADER_FILE_LIST})
 set_property(TARGET ezjson PROPERTY CXX_STANDARD 17)
 
-source_group("ezj_public" FILES ${EZJ_PUBLIC_HEADER_FILE_LIST})
-source_group("ezj_private" FILES ${EZJ_PRIVATE_SOURCE_FILE_LIST})
+source_group("public" FILES ${EZJ_PUBLIC_HEADER_FILE_LIST})
+source_group("private" FILES ${EZJ_PRIVATE_SOURCE_FILE_LIST})
 source_group("rapidjson" FILES ${RAPIDJSON_HEADER_FILE_LIST})
 
 include_directories(ezjson PUBLIC ${EZJ_PUBLIC_INCLUDE_DIR})
